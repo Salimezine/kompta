@@ -251,16 +251,21 @@
             const doc = docs.find(d => d.id === docId);
             if(doc) {
                 doc.status = 'Comptabilisé';
-                doc.amountTTC = ttc.value;
+                doc.ttc = ttc.value + ' TND';
             } else {
                 docs.push({
                     id: docId,
                     fileName: 'Document Manuel',
-                    context: 'tunisie',
+                    fileSize: '0.0 Ko',
+                    supplier: 'Fournisseur Manuel',
+                    invoiceNum: 'MANUEL',
                     date: document.getElementById('date').value,
-                    type: document.getElementById('type_doc').value,
-                    amountTTC: ttc.value,
-                    status: 'Comptabilisé'
+                    ht: document.getElementById('ht').value + ' TND',
+                    tva: document.getElementById('tva').value + ' TND',
+                    ttc: ttc.value + ' TND',
+                    confidence: 100,
+                    status: 'Comptabilisé',
+                    processedAt: new Date().toLocaleDateString('fr-FR')
                 });
             }
             localStorage.setItem('cf_documents', JSON.stringify(docs));

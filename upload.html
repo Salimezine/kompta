@@ -243,14 +243,23 @@
                     
                     // Store mock document data
                     const docId = 'DOC-' + Math.floor(Math.random()*10000);
+                    const htAmount = (Math.random() * 5000 + 100).toFixed(3);
+                    const tvaAmount = (htAmount * 0.19).toFixed(3);
+                    const ttcAmount = (parseFloat(htAmount) + parseFloat(tvaAmount)).toFixed(3);
+                    
                     const mockData = {
                         id: docId,
                         fileName: sf.file.name,
-                        context: currentContext,
-                        date: new Date().toISOString().split('T')[0],
-                        type: 'facture_fournisseur',
-                        amountTTC: (Math.random() * 5000 + 100).toFixed(3),
-                        status: 'Extrait'
+                        fileSize: (sf.file.size / 1024).toFixed(1) + ' Ko',
+                        supplier: 'Fournisseur Simulé SARL',
+                        invoiceNum: 'FAC-2024-' + Math.floor(Math.random()*1000),
+                        date: new Date().toLocaleDateString('fr-FR'),
+                        ht: parseFloat(htAmount).toLocaleString('fr-FR') + ' TND',
+                        tva: parseFloat(tvaAmount).toLocaleString('fr-FR') + ' TND',
+                        ttc: parseFloat(ttcAmount).toLocaleString('fr-FR') + ' TND',
+                        confidence: 98,
+                        status: 'Traité',
+                        processedAt: new Date().toLocaleDateString('fr-FR')
                     };
                     
                     let docs = JSON.parse(localStorage.getItem('cf_documents') || '[]');
