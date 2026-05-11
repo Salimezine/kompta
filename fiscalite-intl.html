@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComptaFlow - Fiscalité Internationale</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .panel {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .data-table th {
+            color: var(--text-light);
+            font-weight: 500;
+            background: var(--bg-light);
+        }
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .badge.europe {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+        .badge.us {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+        .badge.other {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+        .currency-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+        }
+        .currency-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <header style="padding: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); background: white;">
+        <div class="container header-container">
+            <a href="dashboard.html" class="logo">
+                <i class="fa-solid fa-file-invoice-dollar"></i> ComptaFlow
+            </a>
+            <nav class="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="upload.html">Upload</a>
+                <a href="fiscalite-tn.html">Fiscalité TN</a>
+                <a href="fiscalite-intl.html" style="color: var(--primary); font-weight: bold;">Fiscalité Intl</a>
+                <a href="rapports.html">Rapports</a>
+            </nav>
+            <div class="header-cta">
+                <div class="user-profile" style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 35px; height: 35px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">A</div>
+                    <span id="userNameDisplay">Admin</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; margin-bottom: 20px;">
+            <h2><i class="fa-solid fa-globe" style="color: #3B82F6;"></i> Fiscalité Internationale</h2>
+        </div>
+
+        <div class="panel">
+            <h3>TVA Intracommunautaire et VAT Internationale</h3>
+            <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 20px;">Synthèse des montants de TVA appliqués selon les pays partenaires.</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Pays</th>
+                        <th>Région</th>
+                        <th>Base HT (Devise Locale)</th>
+                        <th>Taux Moyen</th>
+                        <th>VAT / TVA à reverser</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img src="https://flagcdn.com/24x18/fr.png" alt="France" style="vertical-align: middle; margin-right: 5px;"> France</td>
+                        <td><span class="badge europe">UE</span></td>
+                        <td>12 500.00 EUR</td>
+                        <td>20%</td>
+                        <td>2 500.00 EUR</td>
+                        <td style="color: #F59E0B;">En attente</td>
+                    </tr>
+                    <tr>
+                        <td><img src="https://flagcdn.com/24x18/us.png" alt="USA" style="vertical-align: middle; margin-right: 5px;"> États-Unis</td>
+                        <td><span class="badge us">US</span></td>
+                        <td>8 200.00 USD</td>
+                        <td>Exonéré (Export)</td>
+                        <td>0.00 USD</td>
+                        <td style="color: #10B981;">Validé</td>
+                    </tr>
+                    <tr>
+                        <td><img src="https://flagcdn.com/24x18/es.png" alt="Espagne" style="vertical-align: middle; margin-right: 5px;"> Espagne</td>
+                        <td><span class="badge europe">UE</span></td>
+                        <td>4 100.00 EUR</td>
+                        <td>21%</td>
+                        <td>861.00 EUR</td>
+                        <td style="color: #10B981;">Payé</td>
+                    </tr>
+                    <tr>
+                        <td><img src="https://flagcdn.com/24x18/ae.png" alt="EAU" style="vertical-align: middle; margin-right: 5px;"> Émirats (EAU)</td>
+                        <td><span class="badge other">Moyen-Orient</span></td>
+                        <td>15 000.00 AED</td>
+                        <td>5%</td>
+                        <td>750.00 AED</td>
+                        <td style="color: #F59E0B;">En attente</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="panel">
+                <h3>Taux de Change Actuels (BCT)</h3>
+                <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 15px;">Mis à jour il y a 2 heures.</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="currency-box">
+                        <div class="currency-icon">€</div>
+                        <div>
+                            <h4 style="margin: 0;">Euro (EUR)</h4>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-light);">1 EUR = 3.385 TND</p>
+                        </div>
+                    </div>
+                    <div class="currency-box">
+                        <div class="currency-icon">$</div>
+                        <div>
+                            <h4 style="margin: 0;">Dollar (USD)</h4>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-light);">1 USD = 3.120 TND</p>
+                        </div>
+                    </div>
+                    <div class="currency-box">
+                        <div class="currency-icon">£</div>
+                        <div>
+                            <h4 style="margin: 0;">Livre (GBP)</h4>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-light);">1 GBP = 3.950 TND</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Documents Douaniers & Incoterms</h3>
+                <table class="data-table" style="margin-top: 15px;">
+                    <thead>
+                        <tr>
+                            <th>Référence</th>
+                            <th>Incoterm</th>
+                            <th>Code HS</th>
+                            <th>Statut Douane</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>INV-EXP-001</td>
+                            <td>FOB</td>
+                            <td>6109.10</td>
+                            <td><span style="color: #10B981;"><i class="fa-solid fa-check"></i> Dédouané</span></td>
+                        </tr>
+                        <tr>
+                            <td>INV-IMP-045</td>
+                            <td>CIF</td>
+                            <td>8471.30</td>
+                            <td><span style="color: #F59E0B;"><i class="fa-solid fa-spinner"></i> En transit</span></td>
+                        </tr>
+                        <tr>
+                            <td>INV-EXP-002</td>
+                            <td>EXW</td>
+                            <td>3304.99</td>
+                            <td><span style="color: #10B981;"><i class="fa-solid fa-check"></i> Dédouané</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        const user = Auth.requireAuth();
+        if(user) document.getElementById('userNameDisplay').innerText = user.name;
+    </script>
+</body>
+</html>

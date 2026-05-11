@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComptaFlow - Paramètres</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .settings-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .settings-nav {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px 0;
+            box-shadow: var(--shadow-sm);
+        }
+        .settings-nav a {
+            display: block;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .settings-nav a:hover {
+            background: var(--bg-light);
+            color: var(--primary);
+        }
+        .settings-nav a.active {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+        }
+        .settings-nav a i {
+            width: 25px;
+            color: var(--text-light);
+        }
+        .settings-nav a.active i {
+            color: var(--primary);
+        }
+        .panel {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header style="padding: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); background: white;">
+        <div class="container header-container">
+            <a href="dashboard.html" class="logo">
+                <i class="fa-solid fa-file-invoice-dollar"></i> ComptaFlow
+            </a>
+            <div class="header-cta">
+                <a href="dashboard.html" class="btn btn-outline">Retour au Dashboard</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="settings-container">
+            <div class="settings-nav">
+                <a href="#" class="active"><i class="fa-solid fa-building"></i> Société</a>
+                <a href="#"><i class="fa-solid fa-users"></i> Utilisateurs</a>
+                <a href="#"><i class="fa-solid fa-calculator"></i> Configuration Fiscale</a>
+                <a href="#"><i class="fa-solid fa-plug"></i> Intégrations</a>
+                <a href="#"><i class="fa-solid fa-file-invoice"></i> Abonnement</a>
+            </div>
+
+            <div>
+                <div class="panel">
+                    <h3>Informations de la Société</h3>
+                    <p style="color: var(--text-light); margin-bottom: 20px;">Modifiez les informations légales de votre entreprise.</p>
+                    
+                    <form>
+                        <div class="form-group">
+                            <label>Raison Sociale</label>
+                            <input type="text" class="form-control" value="TechSolutions SARL">
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Matricule Fiscal</label>
+                                <input type="text" class="form-control" value="1234567/A/A/M000">
+                            </div>
+                            <div class="form-group">
+                                <label>Registre National des Entreprises (RNE)</label>
+                                <input type="text" class="form-control" value="1234567M">
+                            </div>
+                            <div class="form-group">
+                                <label>Code Douane</label>
+                                <input type="text" class="form-control" value="123456D">
+                            </div>
+                            <div class="form-group">
+                                <label>Devise Principale</label>
+                                <select class="form-control">
+                                    <option>TND - Dinar Tunisien</option>
+                                    <option>EUR - Euro</option>
+                                    <option>USD - Dollar Américain</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Adresse du siège social</label>
+                            <input type="text" class="form-control" value="Centre Urbain Nord, Tunis 1082">
+                        </div>
+
+                        <button type="button" class="btn btn-primary">Enregistrer les modifications</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        const user = Auth.requireAuth();
+    </script>
+</body>
+</html>

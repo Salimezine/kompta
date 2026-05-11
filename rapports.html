@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComptaFlow - Rapports & États Financiers</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .report-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--gray-200);
+            padding-bottom: 10px;
+        }
+        .report-tab {
+            padding: 10px 20px;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            transition: 0.3s;
+        }
+        .report-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        .report-tab:hover:not(.active) {
+            color: var(--text-dark);
+            background: var(--bg-light);
+        }
+        .panel {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 30px;
+        }
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .report-table th, .report-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .report-table th {
+            text-align: left;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        .report-table td.amount {
+            text-align: right;
+            font-family: monospace;
+            font-size: 1.05rem;
+        }
+        .report-table tr.total-row td {
+            font-weight: bold;
+            border-top: 2px solid var(--text-dark);
+            border-bottom: 2px solid var(--text-dark);
+            background: var(--bg-light);
+        }
+        .report-table tr.subtitle td {
+            font-weight: bold;
+            color: var(--text-dark);
+            padding-top: 20px;
+            background: #FAFAFA;
+        }
+    </style>
+</head>
+<body>
+    <header style="padding: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); background: white;">
+        <div class="container header-container">
+            <a href="dashboard.html" class="logo">
+                <i class="fa-solid fa-file-invoice-dollar"></i> ComptaFlow
+            </a>
+            <nav class="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="upload.html">Upload</a>
+                <a href="fiscalite-tn.html">Fiscalité TN</a>
+                <a href="fiscalite-intl.html">Fiscalité Intl</a>
+                <a href="rapports.html" style="color: var(--primary); font-weight: bold;">Rapports</a>
+            </nav>
+            <div class="header-cta">
+                <div class="user-profile" style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 35px; height: 35px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">A</div>
+                    <span id="userNameDisplay">Admin</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="max-width: 1000px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; margin-bottom: 20px;">
+            <h2><i class="fa-solid fa-chart-line" style="color: var(--primary);"></i> États Financiers</h2>
+            <div style="display: flex; gap: 10px;">
+                <select class="form-control" style="width: 150px;">
+                    <option>Exercice 2024</option>
+                    <option>Exercice 2023</option>
+                </select>
+                <button class="btn btn-outline"><i class="fa-solid fa-file-export"></i> Exporter PDF</button>
+                <button class="btn btn-primary"><i class="fa-solid fa-file-excel"></i> Exporter Excel</button>
+            </div>
+        </div>
+
+        <div class="report-nav">
+            <button class="report-tab active">Bilan Comptable</button>
+            <button class="report-tab">Compte de Résultat</button>
+            <button class="report-tab">Balance Générale</button>
+            <button class="report-tab">Grand Livre</button>
+        </div>
+
+        <div class="panel">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h3>BILAN AU 31 DÉCEMBRE 2024</h3>
+                <p style="color: var(--text-light);">Exprimé en Dinars Tunisiens (TND) - Normes NCE</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+                <!-- ACTIF -->
+                <div>
+                    <h4 style="border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 0;">ACTIF</h4>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Rubriques</th>
+                                <th style="text-align: right;">Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="subtitle"><td colspan="2">ACTIFS NON COURANTS</td></tr>
+                            <tr>
+                                <td>Immobilisations Incorporelles</td>
+                                <td class="amount">15 400.000</td>
+                            </tr>
+                            <tr>
+                                <td>Immobilisations Corporelles</td>
+                                <td class="amount">125 000.000</td>
+                            </tr>
+                            <tr>
+                                <td>Immobilisations Financières</td>
+                                <td class="amount">5 000.000</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Total Actifs Non Courants</td>
+                                <td class="amount">145 400.000</td>
+                            </tr>
+                            
+                            <tr class="subtitle"><td colspan="2">ACTIFS COURANTS</td></tr>
+                            <tr>
+                                <td>Stocks</td>
+                                <td class="amount">42 300.000</td>
+                            </tr>
+                            <tr>
+                                <td>Clients et comptes rattachés</td>
+                                <td class="amount">58 120.500</td>
+                            </tr>
+                            <tr>
+                                <td>Liquidités et équivalents</td>
+                                <td class="amount">85 450.250</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Total Actifs Courants</td>
+                                <td class="amount">185 870.750</td>
+                            </tr>
+
+                            <tr class="total-row" style="background: var(--primary); color: white;">
+                                <td>TOTAL ACTIF</td>
+                                <td class="amount">331 270.750</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PASSIF -->
+                <div>
+                    <h4 style="border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 0;">CAPITAUX PROPRES ET PASSIF</h4>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Rubriques</th>
+                                <th style="text-align: right;">Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="subtitle"><td colspan="2">CAPITAUX PROPRES</td></tr>
+                            <tr>
+                                <td>Capital social</td>
+                                <td class="amount">100 000.000</td>
+                            </tr>
+                            <tr>
+                                <td>Réserves</td>
+                                <td class="amount">25 000.000</td>
+                            </tr>
+                            <tr>
+                                <td>Résultat de l'exercice</td>
+                                <td class="amount">45 800.250</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Total Capitaux Propres</td>
+                                <td class="amount">170 800.250</td>
+                            </tr>
+                            
+                            <tr class="subtitle"><td colspan="2">PASSIFS NON COURANTS</td></tr>
+                            <tr>
+                                <td>Emprunts</td>
+                                <td class="amount">50 000.000</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Total Passifs Non Courants</td>
+                                <td class="amount">50 000.000</td>
+                            </tr>
+
+                            <tr class="subtitle"><td colspan="2">PASSIFS COURANTS</td></tr>
+                            <tr>
+                                <td>Fournisseurs et comptes rattachés</td>
+                                <td class="amount">65 240.500</td>
+                            </tr>
+                            <tr>
+                                <td>Concours bancaires</td>
+                                <td class="amount">15 000.000</td>
+                            </tr>
+                            <tr>
+                                <td>État, impôts et taxes</td>
+                                <td class="amount">30 230.000</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Total Passifs Courants</td>
+                                <td class="amount">110 470.500</td>
+                            </tr>
+
+                            <tr class="total-row" style="background: var(--primary); color: white;">
+                                <td>TOTAL CAPITAUX ET PASSIF</td>
+                                <td class="amount">331 270.750</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        const user = Auth.requireAuth();
+        if(user) document.getElementById('userNameDisplay').innerText = user.name;
+    </script>
+</body>
+</html>

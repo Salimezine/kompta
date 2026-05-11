@@ -1,0 +1,25 @@
+name = "comptaflow-api"
+main = "src/index.js"
+compatibility_date = "2024-05-11"
+
+# Environment Variables
+[vars]
+ENVIRONMENT = "production"
+# ANTHROPIC_API_KEY = "sk-ant-..." (à configurer via `wrangler secret put ANTHROPIC_API_KEY`)
+# JWT_SECRET = "super-secret-key" (à configurer via `wrangler secret put JWT_SECRET`)
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "comptaflow-db"
+database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" # A remplacer après `wrangler d1 create`
+
+# R2 Storage
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "comptaflow-documents"
+
+# KV Namespace
+[[kv_namespaces]]
+binding = "CACHE"
+id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # A remplacer après `wrangler kv:namespace create`
