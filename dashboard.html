@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau de bord - ComptaFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary:#00B5BD; --primary-hover:#009ca3; --primary-light:rgba(0,181,189,.1);
+      --secondary:#0D2A3B; --bg:#F4FAFA; --white:#fff;
+      --text-dark:#1A3A4C; --text-light:#4A6572;
+      --gray-100:#E2E8F0; --gray-200:#CBD5E1;
+      --success:#10B981; --warning:#F59E0B; --danger:#EF4444;
+      --sidebar-w:260px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-dark);display:flex;min-height:100vh}
+
+    /* SIDEBAR */
+    .sidebar{width:var(--sidebar-w);background:var(--secondary);color:#fff;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:.3s}
+    .sidebar-logo{padding:28px 24px;border-bottom:1px solid rgba(255,255,255,.1);font-family:'Sora',sans-serif;font-size:1.3rem;font-weight:800;display:flex;align-items:center;gap:10px}
+    .sidebar-logo i{color:var(--primary)}
+    .sidebar-nav{flex:1;padding:20px 0;overflow-y:auto}
+    .nav-section{padding:8px 24px;font-size:.75rem;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-bottom:5px}
+    .nav-item{display:flex;align-items:center;gap:14px;padding:13px 24px;cursor:pointer;transition:.2s;border-left:3px solid transparent;font-size:.95rem;opacity:.75}
+    .nav-item:hover{background:rgba(255,255,255,.07);opacity:1}
+    .nav-item.active{background:rgba(0,181,189,.15);border-left-color:var(--primary);opacity:1;color:var(--primary)}
+    .nav-item i{width:20px;text-align:center}
+    .sidebar-user{padding:20px 24px;border-top:1px solid rgba(255,255,255,.1)}
+    .user-card{display:flex;align-items:center;gap:12px}
+    .user-avatar{width:42px;height:42px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem}
+    .user-info .name{font-weight:700;font-size:.95rem}
+    .user-info .plan{font-size:.8rem;opacity:.6}
+    .logout-btn{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:1.1rem;padding:5px;transition:.2s}
+    .logout-btn:hover{color:var(--danger)}
+
+    /* MAIN */
+    .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+    .topbar{background:var(--white);padding:18px 32px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--gray-100);position:sticky;top:0;z-index:50}
+    .topbar h2{font-family:'Sora',sans-serif;font-size:1.3rem;color:var(--secondary)}
+    .topbar-right{display:flex;align-items:center;gap:15px}
+    .topbar-badge{background:var(--primary-light);color:var(--primary);padding:6px 14px;border-radius:50px;font-size:.85rem;font-weight:700}
+    .content{padding:32px;flex:1}
+
+    /* STATS */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:30px}
+    .stat-card{background:var(--white);border-radius:14px;padding:24px;border:1px solid var(--gray-100);transition:.3s;cursor:default}
+    .stat-card:hover{transform:translateY(-4px);box-shadow:0 10px 25px rgba(0,0,0,.08)}
+    .stat-card .icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:16px}
+    .stat-card .value{font-family:'Sora',sans-serif;font-size:2.2rem;font-weight:800;margin-bottom:4px}
+    .stat-card .label{font-size:.85rem;color:var(--text-light);font-weight:500}
+
+    /* UPLOAD */
+    .upload-area{background:var(--white);border-radius:14px;border:2px dashed var(--gray-200);padding:50px;text-align:center;transition:.3s;cursor:pointer;margin-bottom:30px}
+    .upload-area:hover,.upload-area.drag-over{border-color:var(--primary);background:var(--primary-light)}
+    .upload-area .upload-icon{font-size:3.5rem;color:var(--primary);margin-bottom:16px}
+    .upload-area h3{font-family:'Sora',sans-serif;font-size:1.2rem;margin-bottom:8px;color:var(--secondary)}
+    .upload-area p{color:var(--text-light);font-size:.95rem}
+    .upload-area .upload-formats{margin-top:12px;font-size:.85rem;color:var(--text-light)}
+    .upload-area .btn-upload{display:inline-block;margin-top:20px;padding:12px 28px;background:var(--primary);color:#fff;border-radius:8px;font-weight:700;border:none;cursor:pointer;font-family:inherit;font-size:.95rem;transition:.3s}
+    .upload-area .btn-upload:hover{background:var(--primary-hover)}
+    #fileInput{display:none}
+
+    /* PROCESSING */
+    .processing-toast{display:none;background:var(--secondary);color:#fff;border-radius:12px;padding:20px 24px;margin-bottom:20px;align-items:center;gap:16px}
+    .processing-toast.show{display:flex}
+    .spinner{width:30px;height:30px;border:3px solid rgba(255,255,255,.2);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .processing-text .title{font-weight:700;margin-bottom:4px}
+    .processing-text .sub{font-size:.85rem;opacity:.7}
+    .progress-bar-wrap{flex:1;background:rgba(255,255,255,.15);border-radius:50px;height:6px}
+    .progress-bar{height:100%;background:var(--primary);border-radius:50px;width:0;transition:width .3s}
+
+    /* TABLE */
+    .table-section{background:var(--white);border-radius:14px;border:1px solid var(--gray-100);overflow:hidden}
+    .table-header{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--gray-100)}
+    .table-header h3{font-family:'Sora',sans-serif;font-size:1.1rem}
+    .table-search{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--gray-100);border-radius:8px;padding:8px 14px}
+    .table-search input{border:none;background:none;font-family:inherit;font-size:.9rem;color:var(--text-dark);outline:none;width:200px}
+    .table-search i{color:var(--text-light)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:16px 24px;text-align:left;border-bottom:1px solid var(--gray-100)}
+    th{background:var(--bg);font-family:'Sora',sans-serif;font-size:.85rem;color:var(--secondary);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:#F8FCFC}
+    .badge{padding:5px 12px;border-radius:50px;font-size:.8rem;font-weight:700;display:inline-flex;align-items:center;gap:6px}
+    .badge-success{background:#D1FAE5;color:#065F46}
+    .badge-warning{background:#FEF3C7;color:#92400E}
+    .badge-info{background:#DBEAFE;color:#1E40AF}
+    .empty-state{text-align:center;padding:60px 20px;color:var(--text-light)}
+    .empty-state i{font-size:3rem;margin-bottom:16px;color:var(--gray-200)}
+    .empty-state p{font-size:1rem}
+
+    /* OCR MODAL */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .modal-overlay.show{display:flex}
+    .modal{background:var(--white);border-radius:20px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto}
+    .modal-header{padding:24px 28px;border-bottom:1px solid var(--gray-100);display:flex;justify-content:space-between;align-items:center}
+    .modal-header h3{font-family:'Sora',sans-serif;font-size:1.2rem}
+    .modal-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-light);padding:5px}
+    .modal-body{padding:28px}
+    .ocr-field{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--gray-100)}
+    .ocr-field:last-child{border-bottom:none}
+    .ocr-field .field-label{font-size:.9rem;color:var(--text-light);font-weight:500}
+    .ocr-field .field-value{font-weight:700;color:var(--secondary)}
+    .confidence{font-size:.8rem;color:var(--success);margin-left:8px}
+
+    @media(max-width:1024px){
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:768px){
+      .sidebar{transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+      .main{margin-left:0}
+      .stats-grid{grid-template-columns:1fr 1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <i class="fa-solid fa-file-invoice-dollar"></i> ComptaFlow
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Principal</div>
+    <div class="nav-item active" onclick="showView('dashboard')"><i class="fa-solid fa-gauge-high"></i> Tableau de bord</div>
+    <div class="nav-item" onclick="showView('upload')"><i class="fa-solid fa-cloud-arrow-up"></i> Importer des docs</div>
+    <div class="nav-item" onclick="showView('documents')"><i class="fa-regular fa-file-lines"></i> Mes documents</div>
+    <div class="nav-section">Compte</div>
+    <div class="nav-item" onclick="showView('settings')"><i class="fa-solid fa-gear"></i> Paramètres</div>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-card">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <div class="user-info">
+        <div class="name" id="userName">...</div>
+        <div class="plan" id="userPlan">Plan Starter</div>
+      </div>
+      <button class="logout-btn" onclick="Auth.logout()" title="Déconnexion"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <h2 id="pageTitle">Tableau de bord</h2>
+    <div class="topbar-right">
+      <span class="topbar-badge"><i class="fa-solid fa-circle-check"></i> Plan Starter</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- STATS -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="icon" style="background:#DBEAFE;color:#1D4ED8"><i class="fa-solid fa-file-arrow-up"></i></div>
+        <div class="value" id="statImported">0</div>
+        <div class="label">Documents importés</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon" style="background:#D1FAE5;color:#059669"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="value" id="statProcessed" style="color:var(--success)">0</div>
+        <div class="label">Documents traités</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon" style="background:#FEF3C7;color:#D97706"><i class="fa-solid fa-clock"></i></div>
+        <div class="value" id="statPending" style="color:var(--warning)">0</div>
+        <div class="label">En attente</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon" style="background:#FEE2E2;color:#DC2626"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="value" id="statErrors" style="color:var(--danger)">0</div>
+        <div class="label">Erreurs</div>
+      </div>
+    </div>
+
+    <!-- UPLOAD AREA -->
+    <div class="upload-area" id="uploadArea">
+      <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+      <h3>Importez vos documents comptables</h3>
+      <p>Glissez-déposez vos fichiers ici ou cliquez pour sélectionner</p>
+      <div class="upload-formats">Formats supportés : PDF, JPG, PNG, TIFF</div>
+      <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
+        <i class="fa-solid fa-plus"></i> Choisir des fichiers
+      </button>
+      <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.tiff" multiple>
+    </div>
+
+    <!-- PROCESSING TOAST -->
+    <div class="processing-toast" id="processingToast">
+      <div class="spinner"></div>
+      <div class="processing-text">
+        <div class="title">Traitement OCR en cours...</div>
+        <div class="sub" id="processingFileName">Analyse du document</div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-section">
+      <div class="table-header">
+        <h3><i class="fa-regular fa-file-lines" style="color:var(--primary);margin-right:8px"></i>Documents traités</h3>
+        <div class="table-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="searchInput" placeholder="Rechercher..." oninput="filterTable()">
+        </div>
+      </div>
+      <div id="tableContainer">
+        <div class="empty-state">
+          <i class="fa-regular fa-folder-open"></i>
+          <p>Aucun document importé pour l'instant.<br>Importez votre première facture ci-dessus.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- OCR RESULT MODAL -->
+<div class="modal-overlay" id="ocrModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-robot" style="color:var(--primary);margin-right:8px"></i>Données extraites par l'IA</h3>
+      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+const user = Auth.requireAuth();
+if (user) {
+  document.getElementById('userName').textContent = user.name;
+  document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+  document.getElementById('userPlan').textContent = 'Plan ' + (user.plan || 'Starter');
+}
+
+// Documents stored in localStorage
+let documents = JSON.parse(localStorage.getItem('cf_documents') || '[]');
+renderTable();
+updateStats();
+
+// Drag & drop
+const uploadArea = document.getElementById('uploadArea');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.classList.remove('drag-over');
+  handleFiles(e.dataTransfer.files);
+});
+document.getElementById('fileInput').addEventListener('change', e => handleFiles(e.target.files));
+
+function handleFiles(files) {
+  const arr = Array.from(files);
+  if (!arr.length) return;
+  processNext(arr, 0);
+}
+
+function processNext(files, index) {
+  if (index >= files.length) return;
+  const file = files[index];
+  showProcessing(file.name);
+
+  setTimeout(() => {
+    const doc = generateOCRResult(file);
+    documents.unshift(doc);
+    localStorage.setItem('cf_documents', JSON.stringify(documents));
+    renderTable();
+    updateStats();
+    hideProcessing();
+    setTimeout(() => processNext(files, index + 1), 400);
+  }, 2000 + Math.random() * 1000);
+}
+
+function generateOCRResult(file) {
+  const suppliers = ['Tunisie Telecom','Société Générale','Office Dépôt','CTN','STEG','SONEDE','TopNet','Ooredoo'];
+  const types = ['FAC','BL','BC','FACT','INV'];
+  const supplier = suppliers[Math.floor(Math.random() * suppliers.length)];
+  const year = 2024;
+  const month = String(Math.floor(Math.random()*12)+1).padStart(2,'0');
+  const day = String(Math.floor(Math.random()*28)+1).padStart(2,'0');
+  const num = Math.floor(Math.random()*9000)+1000;
+  const ht = (Math.random()*5000+200).toFixed(3);
+  const tva = (ht * 0.19).toFixed(3);
+  const ttc = (parseFloat(ht)+parseFloat(tva)).toFixed(3);
+  const type = types[Math.floor(Math.random()*types.length)];
+  return {
+    id: Date.now() + Math.random(),
+    fileName: file.name,
+    fileSize: (file.size/1024).toFixed(1) + ' Ko',
+    supplier,
+    invoiceNum: `${type}-${year}-${num}`,
+    date: `${day}/${month}/${year}`,
+    ht: parseFloat(ht).toLocaleString('fr-FR') + ' TND',
+    tva: parseFloat(tva).toLocaleString('fr-FR') + ' TND',
+    ttc: parseFloat(ttc).toLocaleString('fr-FR') + ' TND',
+    confidence: Math.floor(Math.random()*5)+95,
+    status: 'Traité',
+    processedAt: new Date().toLocaleDateString('fr-FR')
+  };
+}
+
+function renderTable() {
+  const container = document.getElementById('tableContainer');
+  const query = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  const filtered = documents.filter(d =>
+    d.supplier.toLowerCase().includes(query) ||
+    d.invoiceNum.toLowerCase().includes(query) ||
+    d.fileName.toLowerCase().includes(query)
+  );
+
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty-state"><i class="fa-regular fa-folder-open"></i><p>${documents.length ? 'Aucun résultat trouvé.' : 'Aucun document importé pour l\'instant.<br>Importez votre première facture ci-dessus.'}</p></div>`;
+    return;
+  }
+
+  container.innerHTML = `<table>
+    <thead><tr>
+      <th>Fichier</th><th>Fournisseur</th><th>N° Facture</th>
+      <th>Date</th><th>Montant TTC</th><th>Statut</th><th>Action</th>
+    </tr></thead>
+    <tbody>${filtered.map(d => `
+      <tr>
+        <td><i class="fa-regular fa-file-pdf" style="color:#EF4444;margin-right:8px"></i><span style="font-size:.9rem;color:var(--text-light)">${d.fileName}</span></td>
+        <td><strong>${d.supplier}</strong></td>
+        <td><code style="background:var(--bg);padding:3px 8px;border-radius:5px;font-size:.85rem">${d.invoiceNum}</code></td>
+        <td>${d.date}</td>
+        <td><strong>${d.ttc}</strong></td>
+        <td><span class="badge badge-success"><i class="fa-solid fa-check"></i>${d.status}</span></td>
+        <td>
+          <button onclick="viewOCR('${d.id}')" style="background:var(--primary-light);color:var(--primary);border:none;padding:7px 14px;border-radius:7px;cursor:pointer;font-weight:700;font-size:.85rem">
+            <i class="fa-solid fa-eye"></i> Voir
+          </button>
+          <button onclick="deleteDoc('${d.id}')" style="background:#FEE2E2;color:#DC2626;border:none;padding:7px 10px;border-radius:7px;cursor:pointer;margin-left:5px">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function filterTable() { renderTable(); }
+
+function updateStats() {
+  const total = documents.length;
+  const processed = documents.filter(d => d.status === 'Traité').length;
+  document.getElementById('statImported').textContent = total;
+  document.getElementById('statProcessed').textContent = processed;
+  document.getElementById('statPending').textContent = total - processed;
+  document.getElementById('statErrors').textContent = 0;
+}
+
+function showProcessing(name) {
+  const toast = document.getElementById('processingToast');
+  document.getElementById('processingFileName').textContent = name;
+  toast.classList.add('show');
+  let pct = 0;
+  const bar = document.getElementById('progressBar');
+  const iv = setInterval(() => {
+    pct = Math.min(pct + Math.random()*15, 90);
+    bar.style.width = pct + '%';
+    if (pct >= 90) clearInterval(iv);
+  }, 200);
+  toast._interval = iv;
+}
+
+function hideProcessing() {
+  const toast = document.getElementById('processingToast');
+  const bar = document.getElementById('progressBar');
+  clearInterval(toast._interval);
+  bar.style.width = '100%';
+  setTimeout(() => {
+    toast.classList.remove('show');
+    bar.style.width = '0';
+    document.getElementById('fileInput').value = '';
+  }, 600);
+}
+
+function viewOCR(id) {
+  const doc = documents.find(d => String(d.id) === String(id));
+  if (!doc) return;
+  document.getElementById('modalBody').innerHTML = `
+    <div style="background:var(--bg);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px">
+      <i class="fa-regular fa-file-pdf" style="color:#EF4444;font-size:1.5rem"></i>
+      <div><div style="font-weight:700">${doc.fileName}</div><div style="font-size:.85rem;color:var(--text-light)">${doc.fileSize} · Traité le ${doc.processedAt}</div></div>
+      <span style="margin-left:auto;background:#D1FAE5;color:#065F46;padding:5px 12px;border-radius:50px;font-size:.8rem;font-weight:700"><i class="fa-solid fa-check"></i> ${doc.confidence}% confiance</span>
+    </div>
+    ${field('Fournisseur', doc.supplier)}
+    ${field('Numéro de facture', doc.invoiceNum)}
+    ${field('Date', doc.date)}
+    ${field('Montant HT', doc.ht)}
+    ${field('TVA (19%)', doc.tva)}
+    ${field('Montant TTC', doc.ttc, true)}
+  `;
+  document.getElementById('ocrModal').classList.add('show');
+}
+
+function field(label, value, highlight=false) {
+  return `<div class="ocr-field">
+    <span class="field-label"><i class="fa-solid fa-check-circle" style="color:var(--success);margin-right:6px"></i>${label}</span>
+    <span class="field-value" style="${highlight?'color:var(--primary);font-size:1.1rem':''}">${value}</span>
+  </div>`;
+}
+
+function closeModal() { document.getElementById('ocrModal').classList.remove('show'); }
+
+function deleteDoc(id) {
+  if (!confirm('Supprimer ce document ?')) return;
+  documents = documents.filter(d => String(d.id) !== String(id));
+  localStorage.setItem('cf_documents', JSON.stringify(documents));
+  renderTable(); updateStats();
+}
+
+function showView(view) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const titles = {dashboard:'Tableau de bord',upload:'Importer des documents',documents:'Mes documents',settings:'Paramètres'};
+  document.getElementById('pageTitle').textContent = titles[view] || view;
+  if (view === 'upload') document.getElementById('uploadArea').scrollIntoView({behavior:'smooth'});
+  if (view === 'documents') document.querySelector('.table-section').scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('ocrModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+</script>
+</body>
+</html>

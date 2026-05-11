@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComptaFlow - La comptabilité automatisée par l'IA</title>
+    <meta name="description" content="ComptaFlow automatise le traitement de vos documents comptables grâce à la technologie OCR et à l'intelligence artificielle.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. NAVIGATION -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                ComptaFlow
+            </a>
+            <nav class="nav-links">
+                <a href="#accueil">Accueil</a>
+                <a href="#fonctionnalites">Fonctionnalités</a>
+                <a href="#comment-ca-marche">Comment ça marche</a>
+                <a href="#tarifs">Tarifs</a>
+                <a href="#temoignages">Témoignages</a>
+                <a href="#contact">Contact</a>
+            </nav>
+            <div class="header-cta">
+                <a href="login.html" class="btn btn-outline" style="margin-right:10px">Se connecter</a><a href="signup.html" class="btn btn-primary">Essai gratuit 14 jours</a>
+            </div>
+            <div class="hamburger">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="mobile-menu">
+            <a href="#accueil">Accueil</a>
+            <a href="#fonctionnalites">Fonctionnalités</a>
+            <a href="#comment-ca-marche">Comment ça marche</a>
+            <a href="#tarifs">Tarifs</a>
+            <a href="#temoignages">Témoignages</a>
+            <a href="#contact">Contact</a>
+            <a href="#tarifs" class="btn btn-primary" style="margin-top: 15px; text-align: center;">Essai gratuit 14 jours</a>
+        </div>
+    </header>
+
+    <!-- 2. HERO SECTION -->
+    <section id="accueil" class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="badge">
+                    <i class="fa-solid fa-bolt"></i> Propulsé par l'IA & OCR
+                </div>
+                <h1>La comptabilité automatisée, plus <span>simple</span>, plus <span>rapide</span>, plus <span>fiable</span>.</h1>
+                <p class="hero-subtitle">ComptaFlow automatise le traitement de vos documents comptables grâce à la technologie OCR et à l'intelligence artificielle.</p>
+                
+                <ul class="hero-features">
+                    <li><i class="fa-solid fa-check"></i> Capture intelligente avec OCR</li>
+                    <li><i class="fa-solid fa-check"></i> Extraction automatique des données</li>
+                    <li><i class="fa-solid fa-check"></i> Intégration comptable en un clic</li>
+                    <li><i class="fa-solid fa-check"></i> Gain de temps et réduction des erreurs</li>
+                </ul>
+                
+                <div class="hero-cta">
+                    <a href="signup.html" class="btn btn-primary">Commencer gratuitement</a>
+                    <a href="#demo" class="btn btn-outline"><i class="fa-solid fa-play"></i> Voir la démo</a>
+                </div>
+            </div>
+            
+            <div class="hero-image">
+                <div class="dashboard-mockup">
+                    <div class="robot-ai">
+                        🤖
+                    </div>
+                    <div class="dashboard-header">
+                        <div>
+                            <h4 style="font-family: 'DM Sans'; color: var(--text-dark);">Aperçu Dashboard</h4>
+                            <p style="font-size: 0.8rem; color: var(--text-light);">Mise à jour à l'instant</p>
+                        </div>
+                        <i class="fa-solid fa-chart-line" style="color: var(--primary); font-size: 1.5rem;"></i>
+                    </div>
+                    <div class="dashboard-skeleton">
+                        <div class="skel-row"></div>
+                        <div class="skel-row"></div>
+                        <div class="skel-row"></div>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-box">
+                            <h3>126</h3>
+                            <p>Docs Importés</p>
+                        </div>
+                        <div class="stat-box">
+                            <h3>112</h3>
+                            <p>Docs Traités</p>
+                        </div>
+                        <div class="stat-box">
+                            <h3>99%</h3>
+                            <p>Précision</p>
+                        </div>
+                        <div class="stat-box">
+                            <h3 style="color: #10B981;">0</h3>
+                            <p>Erreurs</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. WORKFLOW - Comment ça marche -->
+    <section id="comment-ca-marche" class="workflow section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h2>Comment ça marche ?</h2>
+                <p>Un processus simple et fluide pour transformer vos documents papier en écritures comptables.</p>
+            </div>
+            
+            <div class="workflow-steps">
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+                    <h3>1. Documents</h3>
+                    <p style="color: var(--text-light); font-size: 0.95rem;">Importez vos factures, reçus et relevés.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fa-solid fa-camera-retro"></i>
+                    </div>
+                    <h3>2. OCR & IA</h3>
+                    <p style="color: var(--text-light); font-size: 0.95rem;">Notre IA lit et comprend chaque document.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <h3>3. Données Extraites</h3>
+                    <p style="color: var(--text-light); font-size: 0.95rem;">Vérifiez les données structurées.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <h3>4. Intégration Comptable</h3>
+                    <p style="color: var(--text-light); font-size: 0.95rem;">Exportez vers votre logiciel.</p>
+                </div>
+            </div>
+            
+            <div class="extracted-data">
+                <h4>Données extraites automatiquement :</h4>
+                <div class="tags">
+                    <div class="tag"><i class="fa-solid fa-check-circle"></i> Fournisseur</div>
+                    <div class="tag"><i class="fa-solid fa-check-circle"></i> Numéro de facture</div>
+                    <div class="tag"><i class="fa-solid fa-check-circle"></i> Date</div>
+                    <div class="tag"><i class="fa-solid fa-check-circle"></i> Montant HT</div>
+                    <div class="tag"><i class="fa-solid fa-check-circle"></i> TVA</div>
+                    <div class="tag"><i class="fa-solid fa-check-circle"></i> Montant TTC</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. DASHBOARD APERÇU -->
+    <section class="dashboard-preview section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h2>Suivi en temps réel</h2>
+                <p>Gardez un œil sur l'avancement du traitement de vos documents via un tableau de bord intuitif.</p>
+            </div>
+            
+            <div class="dash-stats-row">
+                <div class="dash-stat-card">
+                    <p>Documents importés</p>
+                    <h3>126</h3>
+                </div>
+                <div class="dash-stat-card">
+                    <p>Documents traités</p>
+                    <h3 style="color: #10B981;">112</h3>
+                </div>
+                <div class="dash-stat-card">
+                    <p>En attente</p>
+                    <h3 style="color: #F59E0B;">14</h3>
+                </div>
+                <div class="dash-stat-card">
+                    <p>Erreurs</p>
+                    <h3 style="color: #EF4444;">0</h3>
+                </div>
+            </div>
+            
+            <div class="dash-table-container">
+                <table class="dash-table">
+                    <thead>
+                        <tr>
+                            <th>Fournisseur</th>
+                            <th>N° Facture</th>
+                            <th>Date</th>
+                            <th>Montant TTC</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Société Générale</strong></td>
+                            <td>FAC-2024-1056</td>
+                            <td>24/05/2024</td>
+                            <td>2 450,000 TND</td>
+                            <td><span class="status-badge"><i class="fa-solid fa-check"></i> Traité</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tunisie Telecom</strong></td>
+                            <td>FT-2024-0987</td>
+                            <td>23/05/2024</td>
+                            <td>1 320,000 TND</td>
+                            <td><span class="status-badge"><i class="fa-solid fa-check"></i> Traité</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Office Dépôt</strong></td>
+                            <td>BL-2024-0456</td>
+                            <td>22/05/2024</td>
+                            <td>980,000 TND</td>
+                            <td><span class="status-badge"><i class="fa-solid fa-check"></i> Traité</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>CTN</strong></td>
+                            <td>FAC-2024-0789</td>
+                            <td>21/05/2024</td>
+                            <td>3 580,000 TND</td>
+                            <td><span class="status-badge"><i class="fa-solid fa-check"></i> Traité</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. FONCTIONNALITÉS DÉTAILLÉES -->
+    <section id="fonctionnalites" class="features section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h2>Des fonctionnalités puissantes</h2>
+                <p>Tout ce dont vous avez besoin pour moderniser et accélérer votre gestion comptable quotidienne.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-camera"></i></div>
+                    <h3>Capture OCR intelligente</h3>
+                    <p>Scan et reconnaissance automatique de tous vos documents papier ou numériques avec une précision inégalée.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-robot"></i></div>
+                    <h3>Extraction IA</h3>
+                    <p>L'intelligence artificielle extrait précisément les données (montants, dates, TVA) en quelques secondes.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                    <h3>Intégration comptable</h3>
+                    <p>Synchronisation directe et sans friction avec les logiciels comptables les plus populaires du marché.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                    <h3>Tableau de bord</h3>
+                    <p>Une vue d'ensemble claire de tous vos documents, leur statut de traitement en temps réel.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>Sécurité maximale</h3>
+                    <p>Vos données sont chiffrées de bout en bout et hébergées sur des serveurs hautement sécurisés.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <h3>Traitement rapide</h3>
+                    <p>Des centaines de factures traitées en quelques minutes. Fini la saisie manuelle interminable.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. POURQUOI COMPTAFLOW -->
+    <section class="why-us section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h2>Pourquoi choisir ComptaFlow ?</h2>
+                <p>Découvrez les avantages concrets de notre solution pour votre entreprise.</p>
+            </div>
+            
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-bolt-lightning"></i>
+                    </div>
+                    <h3>Rapidité</h3>
+                    <p>Traitement en quelques secondes au lieu de plusieurs minutes par facture.</p>
+                </div>
+                <div class="why-card">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3>Précision</h3>
+                    <p><strong>99%</strong> de taux de reconnaissance garantissant l'absence d'erreurs de saisie.</p>
+                </div>
+                <div class="why-card">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-sack-dollar"></i>
+                    </div>
+                    <h3>Économies</h3>
+                    <p>Réduisez vos coûts de traitement administratif de <strong>70%</strong>.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. TARIFS -->
+    <section id="tarifs" class="pricing section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h2>Des tarifs adaptés à vos besoins</h2>
+                <p>Commencez gratuitement et évoluez selon la croissance de votre entreprise.</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <!-- Plan Starter -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Starter</h3>
+                        <div class="price">0<span> TND/mois</span></div>
+                        <span class="for-who">Pour Auto-entrepreneurs / TPE</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fa-solid fa-check"></i> Jusqu'à 50 documents/mois</li>
+                        <li><i class="fa-solid fa-check"></i> Technologie OCR standard</li>
+                        <li><i class="fa-solid fa-check"></i> Export manuel</li>
+                        <li><i class="fa-solid fa-check"></i> Support par email</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline">Commencer gratuitement</a>
+                </div>
+                
+                <!-- Plan Pro -->
+                <div class="pricing-card popular">
+                    <div class="popular-badge">Le plus populaire</div>
+                    <div class="pricing-header">
+                        <h3>Pro</h3>
+                        <div class="price">49<span> TND/mois</span></div>
+                        <span class="for-who">Pour les PME</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fa-solid fa-check"></i> Documents illimités</li>
+                        <li><i class="fa-solid fa-check"></i> Extraction IA Avancée (99%)</li>
+                        <li><i class="fa-solid fa-check"></i> Intégrations comptables directes</li>
+                        <li><i class="fa-solid fa-check"></i> Support prioritaire</li>
+                    </ul>
+                    <a href="signup.html" class="btn btn-primary">Essai gratuit 14 jours</a>
+                </div>
+                
+                <!-- Plan Enterprise -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Enterprise</h3>
+                        <div class="price">Sur devis</div>
+                        <span class="for-who">Pour les Grandes entreprises</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fa-solid fa-check"></i> Tout de l'offre Pro</li>
+                        <li><i class="fa-solid fa-check"></i> Accès API complet</li>
+                        <li><i class="fa-solid fa-check"></i> Formation personnalisée</li>
+                        <li><i class="fa-solid fa-check"></i> Account Manager dédié</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline">Nous contacter</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. TÉMOIGNAGES -->
+    <section id="temoignages" class="testimonials section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h2>Ce que pensent nos clients</h2>
+                <p>Découvrez comment ComptaFlow a transformé le quotidien des professionnels.</p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"ComptaFlow nous a fait gagner un temps précieux. Nous ne passons plus des heures à saisir les factures en fin de mois. Tout est automatisé et la précision est impressionnante !"</p>
+                    <div class="client-info">
+                        <img src="https://i.pravatar.cc/150?img=32" alt="Sarah Ben Ali" class="client-img">
+                        <div class="client-details">
+                            <h4>Sarah Ben Ali</h4>
+                            <p>Directrice Financière, TechSolutions</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"L'intégration avec notre logiciel de comptabilité s'est faite en quelques clics. L'interface est très claire et la détection OCR est de loin la meilleure que j'ai pu tester."</p>
+                    <div class="client-info">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="Mehdi Trabelsi" class="client-img">
+                        <div class="client-details">
+                            <h4>Mehdi Trabelsi</h4>
+                            <p>Expert-Comptable, Cabinet MT</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"En tant que petite structure, je cherchais une solution abordable et efficace. Le plan gratuit est parfait pour démarrer et l'outil est incroyablement simple d'utilisation."</p>
+                    <div class="client-info">
+                        <img src="https://i.pravatar.cc/150?img=5" alt="Amina Khemiri" class="client-img">
+                        <div class="client-details">
+                            <h4>Amina Khemiri</h4>
+                            <p>Gérante, E-Shop Tunisie</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. FAQ -->
+    <section class="faq section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h2>Questions Fréquentes</h2>
+                <p>Trouvez rapidement les réponses à vos questions.</p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Comment fonctionne l'OCR ?
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        L'OCR (Optical Character Recognition) couplé à notre Intelligence Artificielle analyse vos documents scannés ou PDF, identifie les zones de texte et les transforme en données structurées exploitables (montants, dates, noms).
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Quels formats de fichiers sont supportés ?
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Nous supportons les formats PDF, JPG, PNG, TIFF et HEIC. Vous pouvez également transférer directement vos emails avec pièces jointes à une adresse dédiée.
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Mes données sont-elles sécurisées ?
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Absolument. Vos données sont chiffrées (AES-256) lors de leur transit et de leur stockage. Nous utilisons des serveurs hautement sécurisés et respectons les normes strictes de confidentialité des données financières.
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Puis-je annuler à tout moment ?
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Oui, tous nos abonnements sont sans engagement de durée. Vous pouvez annuler, mettre en pause ou modifier votre forfait à tout moment depuis votre espace client.
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Existe-t-il une période d'essai ?
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Oui, nous proposons une période d'essai gratuite de 14 jours sur notre plan Pro. Aucune carte bancaire n'est requise pour commencer à tester l'automatisation.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. CONTACT & CTA FINAL -->
+    <section id="contact" class="contact-cta section-padding">
+        <div class="container">
+            <div class="contact-container">
+                <div class="cta-info">
+                    <div class="cta-info-content">
+                        <h2>Prêt à automatiser votre comptabilité ?</h2>
+                        <p>Rejoignez les centaines d'entreprises qui gagnent déjà du temps avec ComptaFlow. Démarrer prend moins d'une minute.</p>
+                        
+                        <div class="contact-details">
+                            <div class="contact-item">
+                                <i class="fa-solid fa-phone"></i>
+                                <span>(+216) 71 83 14 30</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fa-solid fa-globe"></i>
+                                <span>www.comptaflow.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fa-solid fa-envelope"></i>
+                                <span>contact@comptaflow.com</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form-wrapper">
+                    <form action="#" method="POST">
+                        <div class="form-group">
+                            <label for="name">Nom complet</label>
+                            <input type="text" id="name" class="form-control" placeholder="Votre nom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Adresse Email</label>
+                            <input type="email" id="email" class="form-control" placeholder="vous@entreprise.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Société</label>
+                            <input type="text" id="company" class="form-control" placeholder="Nom de votre société">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" class="form-control" placeholder="Comment pouvons-nous vous aider ?"></textarea>
+                        </div>
+                        <a href="signup.html" class="btn btn-primary" style="width: 100%; display:flex; justify-content:center">Démarrer gratuitement</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        ComptaFlow
+                    </div>
+                    <p>La solution intelligente pour automatiser le traitement de vos documents comptables et libérer votre temps.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-link-group">
+                        <h4>Produit</h4>
+                        <ul>
+                            <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+                            <li><a href="#tarifs">Tarifs</a></li>
+                            <li><a href="#comment-ca-marche">Comment ça marche</a></li>
+                            <li><a href="#">Intégrations</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-link-group">
+                        <h4>Entreprise</h4>
+                        <ul>
+                            <li><a href="#">À propos</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                            <li><a href="#">Carrières</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-link-group">
+                        <h4>Légal</h4>
+                        <ul>
+                            <li><a href="#">Mentions légales</a></li>
+                            <li><a href="#">Politique de confidentialité</a></li>
+                            <li><a href="#">CGU</a></li>
+                            <li><a href="#">Sécurité</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 ComptaFlow. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            const hamburger = document.querySelector('.hamburger');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            hamburger.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+            
+            // Header Scroll Effect
+            const header = document.querySelector('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.style.padding = '10px 0';
+                    header.style.boxShadow = '0 5px 20px rgba(0,0,0,0.1)';
+                } else {
+                    header.style.padding = '15px 0';
+                    header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.05)';
+                }
+            });
+
+            // FAQ Accordion
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    
+                    // Close all other answers
+                    faqQuestions.forEach(q => {
+                        if (q !== question) {
+                            q.classList.remove('active');
+                            q.nextElementSibling.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current answer
+                    question.classList.toggle('active');
+                    answer.classList.toggle('active');
+                });
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    if (href !== '#') {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            // Close mobile menu if open
+                            mobileMenu.classList.remove('active');
+                            
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
