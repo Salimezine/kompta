@@ -389,7 +389,10 @@ async function processNext(files, index) {
       body: formData
     });
     
-    if(!uploadRes.ok) throw new Error("Erreur upload");
+    if(!uploadRes.ok) {
+      const errText = await uploadRes.text();
+      throw new Error("Erreur upload: " + errText);
+    }
     const uploadData = await uploadRes.json();
     const docId = uploadData.docId;
 
