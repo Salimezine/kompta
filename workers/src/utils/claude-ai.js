@@ -1,91 +1,105 @@
-export async function analyzeDocument(fileUrl, context, env) {
-  // En production, cette fonction :
-  // 1. Télécharge le fichier depuis R2 via fileUrl
-  // 2. Le convertit si nécessaire (ex: PDF -> Base64 Image)
-  // 3. Envoie le fichier à l'API Anthropic (Claude 3.5 Sonnet / Opus) avec le prompt métier.
+function arrayBufferToBase64(buffer) {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 8192;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    const chunk = bytes.subarray(i, i + chunkSize);
+    binary += String.fromCharCode.apply(null, chunk);
+  }
+  return btoa(binary);
+}
+
+export async function analyzeDocument(fileKey, context, env) {
+  let fileData, mimeType;
   
-  /* PROMPT CLAUDE:
-  "Tu es un expert-comptable certifié en Tunisie et en comptabilité internationale. 
-  Analyse ce document et extrais les données en JSON strict selon le schéma fourni."
-  */
+  // 1. Récupérer le fichier depuis R2
+  if (env.STORAGE) {
+    const fileObj = await env.STORAGE.get(fileKey);
+    if (!fileObj) throw new Error("Fichier non trouvé dans R2");
+    fileData = await fileObj.arrayBuffer();
+    mimeType = fileObj.httpMetadata?.contentType || 'application/pdf'; // Par défaut PDF si non spécifié
+  } else {
+    throw new Error("Le stockage R2 n'est pas configuré.");
+  }
 
   const apiKey = env.ANTHROPIC_API_KEY;
   const isRealMode = Boolean(apiKey && apiKey !== "sk-ant-...");
 
-  if (isRealMode) {
-    // Vrai appel API (Pseudocode)
-    /*
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "claude-3-opus-20240229",
-        max_tokens: 1024,
-        messages: [
-          { role: "user", content: "..." }
-        ]
-      })
-    });
-    return await response.json();
-    */
+  if (!isRealMode) {
+    console.log("Clé API manquante, renvoi de données de test.");
+    return {
+      emetteur: { nom: 'Mode Test (Pas de clé API)', numero_document: 'TEST-000' },
+      date: new Date().toISOString().split('T')[0],
+      montant_ht: 100, montant_tva: 19, montant_ttc: 119, devise: 'TND',
+      confidence: 1.0, statut: 'Erreur: Clé manquante'
+    };
   }
 
-  // --- MODE MOCK (Simulation) ---
-  console.log(`Simulation de l'analyse OCR pour le document ${fileUrl} en contexte ${context}`);
+  // 2. Préparer l'appel API
+  const base64Data = arrayBufferToBase64(fileData);
+  const systemPrompt = "Tu es un expert-comptable très précis. Analyse cette facture et extrais toutes les données utiles en format JSON. Ne renvoie QUE du JSON valide. N'ajoute pas de texte avant ou après le JSON. Format attendu: { \"emetteur\": { \"nom\": \"...\" }, \"numero_document\": \"...\", \"date\": \"YYYY-MM-DD\", \"montant_ht\": nombre, \"montant_tva\": nombre, \"montant_ttc\": nombre, \"devise\": \"...\" }";
   
-  // Attendre 2 secondes pour simuler le délai de l'IA
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  let mediaType = mimeType;
+  // Fallback if mimeType is invalid for Claude
+  if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'].includes(mediaType)) {
+      mediaType = 'application/pdf'; // Default guess
+  }
 
-  if (context === 'tunisie') {
-    return {
-      contexte: 'tunisie',
-      type_document: 'facture_fournisseur',
-      numero_document: 'FAC-2024-SIMUL',
-      date: new Date().toISOString().split('T')[0],
-      langue: 'fr',
-      devise: 'TND',
-      emetteur: {
-        nom: 'Fournisseur Simulé SARL',
-        matricule_fiscal: '1234567/A/A/M000',
-        adresse: 'Tunis, Tunisie'
-      },
-      montant_ht: 2000.000,
-      taux_tva: 19,
-      montant_tva: 380.000,
-      droit_timbre: 1.000,
-      retenue_source: 0,
-      montant_ttc: 2381.000,
-      ecritures: [
-        { compte: '607000', libelle: 'Achats de marchandises', debit: 2000, credit: 0 },
-        { compte: '436660', libelle: 'TVA déductible', debit: 380, credit: 0 },
-        { compte: '665400', libelle: 'Droits de timbre', debit: 1, credit: 0 },
-        { compte: '401100', libelle: 'Fournisseurs', debit: 0, credit: 2381 }
-      ],
-      confidence: 0.98
-    };
-  } else {
-    return {
-      contexte: 'international',
-      type_document: 'commercial_invoice',
-      numero_document: 'INV-INTL-999',
-      date: new Date().toISOString().split('T')[0],
-      langue: 'en',
-      devise: 'EUR',
-      emetteur: {
-        nom: 'Global Supplier Ltd',
-        vat_number: 'FR123456789',
-        pays: 'France'
-      },
-      subtotal: 5000.00,
-      vat_rate: 20,
-      vat_amount: 1000.00,
-      total: 6000.00,
-      incoterms: 'DAP',
-      confidence: 0.95
-    };
+  let contentBlock = [
+    {
+      type: mediaType === 'application/pdf' ? "document" : "image",
+      source: {
+        type: "base64",
+        media_type: mediaType,
+        data: base64Data
+      }
+    },
+    {
+      type: "text",
+      text: "Extrais les données comptables en JSON strict selon tes instructions système."
+    }
+  ];
+
+  // 3. Appeler Claude 3.5 Sonnet
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "claude-3-5-sonnet-20240620",
+      max_tokens: 2000,
+      system: systemPrompt,
+      messages: [
+        { role: "user", content: contentBlock }
+      ]
+    })
+  });
+
+  const responseText = await response.text();
+  
+  if (!response.ok) {
+    console.error("Erreur API Anthropic:", responseText);
+    throw new Error("Erreur de l'API Claude: " + response.statusText);
+  }
+
+  try {
+    const result = JSON.parse(responseText);
+    if (result.content && result.content[0] && result.content[0].text) {
+      const jsonStr = result.content[0].text;
+      // Claude renvoie parfois le JSON dans un bloc markdown
+      const match = jsonStr.match(/```json\n([\s\S]*)\n```/) || jsonStr.match(/```([\s\S]*?)```/);
+      const cleanJson = match ? match[1] : jsonStr;
+      
+      const parsedData = JSON.parse(cleanJson);
+      parsedData.confidence = 0.99; // Assumed high confidence from Claude
+      return parsedData;
+    }
+    throw new Error("Format inattendu de l'API Claude");
+  } catch(e) {
+    console.error("Erreur parsing JSON:", responseText);
+    throw new Error("Erreur de parsing des données extraites");
   }
 }

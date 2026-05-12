@@ -323,10 +323,39 @@ if (user) {
   document.getElementById('userPlan').textContent = 'Plan ' + (user.plan || 'Starter');
 }
 
-// Documents stored in localStorage
-let documents = JSON.parse(localStorage.getItem('cf_documents') || '[]');
-renderTable();
-updateStats();
+let documents = [];
+
+async function fetchDocuments() {
+  try {
+    const res = await fetch('http://localhost:8787/api/documents');
+    if(res.ok) {
+      const data = await res.json();
+      documents = data.map(dbDoc => {
+         const extracted = dbDoc.extracted_data ? JSON.parse(dbDoc.extracted_data) : null;
+         return {
+            id: dbDoc.id,
+            fileName: dbDoc.filename,
+            fileSize: 'N/A',
+            supplier: extracted ? (extracted.emetteur?.nom || 'Inconnu') : '...',
+            invoiceNum: extracted ? extracted.numero_document : '...',
+            date: extracted ? extracted.date : (dbDoc.created_at ? dbDoc.created_at.split('T')[0] : '...'),
+            ht: extracted ? extracted.montant_ht + ' ' + (extracted.devise || 'TND') : '...',
+            tva: extracted ? extracted.montant_tva + ' ' + (extracted.devise || 'TND') : '...',
+            ttc: extracted ? extracted.montant_ttc + ' ' + (extracted.devise || 'TND') : '...',
+            confidence: extracted ? (extracted.confidence * 100).toFixed(0) : 0,
+            status: dbDoc.statut || 'En attente',
+            processedAt: dbDoc.created_at ? dbDoc.created_at.split('T')[0] : '...'
+         };
+      });
+      renderTable();
+      updateStats();
+    }
+  } catch(e) { 
+    console.error("Failed to fetch documents", e); 
+  }
+}
+
+fetchDocuments();
 
 // Drag & drop
 const uploadArea = document.getElementById('uploadArea');
@@ -345,48 +374,40 @@ function handleFiles(files) {
   processNext(arr, 0);
 }
 
-function processNext(files, index) {
+async function processNext(files, index) {
   if (index >= files.length) return;
   const file = files[index];
   showProcessing(file.name);
 
-  setTimeout(() => {
-    const doc = generateOCRResult(file);
-    documents.unshift(doc);
-    localStorage.setItem('cf_documents', JSON.stringify(documents));
-    renderTable();
-    updateStats();
-    hideProcessing();
-    setTimeout(() => processNext(files, index + 1), 400);
-  }, 2000 + Math.random() * 1000);
-}
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('context', 'tunisie');
 
-function generateOCRResult(file) {
-  const suppliers = ['Tunisie Telecom','Société Générale','Office Dépôt','CTN','STEG','SONEDE','TopNet','Ooredoo'];
-  const types = ['FAC','BL','BC','FACT','INV'];
-  const supplier = suppliers[Math.floor(Math.random() * suppliers.length)];
-  const year = 2024;
-  const month = String(Math.floor(Math.random()*12)+1).padStart(2,'0');
-  const day = String(Math.floor(Math.random()*28)+1).padStart(2,'0');
-  const num = Math.floor(Math.random()*9000)+1000;
-  const ht = (Math.random()*5000+200).toFixed(3);
-  const tva = (ht * 0.19).toFixed(3);
-  const ttc = (parseFloat(ht)+parseFloat(tva)).toFixed(3);
-  const type = types[Math.floor(Math.random()*types.length)];
-  return {
-    id: Date.now() + Math.random(),
-    fileName: file.name,
-    fileSize: (file.size/1024).toFixed(1) + ' Ko',
-    supplier,
-    invoiceNum: `${type}-${year}-${num}`,
-    date: `${day}/${month}/${year}`,
-    ht: parseFloat(ht).toLocaleString('fr-FR') + ' TND',
-    tva: parseFloat(tva).toLocaleString('fr-FR') + ' TND',
-    ttc: parseFloat(ttc).toLocaleString('fr-FR') + ' TND',
-    confidence: Math.floor(Math.random()*5)+95,
-    status: 'Traité',
-    processedAt: new Date().toLocaleDateString('fr-FR')
-  };
+    const uploadRes = await fetch('http://localhost:8787/api/upload', {
+      method: 'POST',
+      body: formData
+    });
+    
+    if(!uploadRes.ok) throw new Error("Erreur upload");
+    const uploadData = await uploadRes.json();
+    const docId = uploadData.docId;
+
+    const analyzeRes = await fetch(`http://localhost:8787/api/analyze/${docId}`, {
+      method: 'POST'
+    });
+
+    if(!analyzeRes.ok) throw new Error("Erreur analyse");
+    
+    await fetchDocuments();
+    hideProcessing();
+    
+    processNext(files, index + 1);
+  } catch(e) {
+    console.error(e);
+    hideProcessing();
+    alert("Erreur: " + e.message);
+  }
 }
 
 function renderTable() {

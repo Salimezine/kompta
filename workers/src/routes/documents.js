@@ -1,19 +1,36 @@
 import { analyzeDocument } from '../utils/claude-ai.js';
 
 export async function handleUpload(request, env) {
-  // En production, cette route devrait extraire le FormData (le fichier),
-  // l'enregistrer dans R2 (env.STORAGE), puis créer une entrée dans D1.
-  
-  // Simulation :
-  const { fileName, context } = await request.json();
-  const docId = 'DOC-' + Date.now();
-  
-  const query = `INSERT INTO documents (id, company_id, user_id, filename, file_url, contexte) VALUES (?, ?, ?, ?, ?, ?)`;
-  await env.DB.prepare(query).bind(docId, 'COMP-1', 'USER-1', fileName, 'r2://' + fileName, context).run();
+  try {
+    const formData = await request.formData();
+    const file = formData.get('file');
+    const context = formData.get('context') || 'tunisie';
 
-  return new Response(JSON.stringify({ success: true, docId }), {
-    headers: { "Content-Type": "application/json" }
-  });
+    if (!file) {
+      return new Response("No file uploaded", { status: 400 });
+    }
+
+    const fileName = file.name;
+    const docId = 'DOC-' + Date.now();
+    const fileKey = docId + '-' + fileName;
+    
+    // Sauvegarde dans R2
+    if (env.STORAGE) {
+      await env.STORAGE.put(fileKey, file.stream(), {
+        httpMetadata: { contentType: file.type }
+      });
+    }
+
+    // Sauvegarde dans D1
+    const query = `INSERT INTO documents (id, company_id, user_id, filename, file_url, contexte) VALUES (?, ?, ?, ?, ?, ?)`;
+    await env.DB.prepare(query).bind(docId, 'COMP-1', 'USER-1', fileName, fileKey, context).run();
+
+    return new Response(JSON.stringify({ success: true, docId }), {
+      headers: { "Content-Type": "application/json" }
+    });
+  } catch(err) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  }
 }
 
 export async function handleAnalyze(id, env) {
@@ -23,7 +40,7 @@ export async function handleAnalyze(id, env) {
     return new Response("Document non trouvé", { status: 404 });
   }
 
-  // Appeler l'API Claude (simulée ou réelle)
+  // Appeler l'API Claude
   const extractionResult = await analyzeDocument(docInfo.file_url, docInfo.contexte, env);
 
   // Mettre à jour la DB

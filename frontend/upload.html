@@ -221,70 +221,73 @@
             });
         }
 
-        function simulateUploadAndAnalysis(sf, index) {
+        async function simulateUploadAndAnalysis(sf, index) {
             const progressFill = document.getElementById(`progress-${sf.id}`);
             const statusText = document.getElementById(`status-${sf.id}`);
-            let progress = 0;
             
-            statusText.innerText = 'Extraction IA...';
+            statusText.innerText = 'Upload...';
             statusText.style.color = 'var(--primary)';
-            
-            const interval = setInterval(() => {
-                progress += Math.random() * 15;
-                if(progress > 100) progress = 100;
-                progressFill.style.width = `${progress}%`;
+            progressFill.style.width = '30%';
+
+            try {
+                // 1. Upload
+                const formData = new FormData();
+                formData.append('file', sf.file);
+                formData.append('context', currentContext);
+
+                const uploadRes = await fetch('http://localhost:8787/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
                 
-                if(progress === 100) {
-                    clearInterval(interval);
-                    sf.status = 'done';
-                    statusText.innerHTML = '<i class="fa-solid fa-check-circle"></i> Terminé';
-                    statusText.style.color = '#10B981';
-                    progressFill.style.background = '#10B981';
-                    
-                    // Store mock document data
-                    const docId = 'DOC-' + Math.floor(Math.random()*10000);
-                    const htAmount = (Math.random() * 5000 + 100).toFixed(3);
-                    const tvaAmount = (htAmount * 0.19).toFixed(3);
-                    const ttcAmount = (parseFloat(htAmount) + parseFloat(tvaAmount)).toFixed(3);
-                    
-                    const mockData = {
-                        id: docId,
-                        fileName: sf.file.name,
-                        fileSize: (sf.file.size / 1024).toFixed(1) + ' Ko',
-                        supplier: 'Fournisseur Simulé SARL',
-                        invoiceNum: 'FAC-2024-' + Math.floor(Math.random()*1000),
-                        date: new Date().toLocaleDateString('fr-FR'),
-                        ht: parseFloat(htAmount).toLocaleString('fr-FR') + ' TND',
-                        tva: parseFloat(tvaAmount).toLocaleString('fr-FR') + ' TND',
-                        ttc: parseFloat(ttcAmount).toLocaleString('fr-FR') + ' TND',
-                        confidence: 98,
-                        status: 'Traité',
-                        processedAt: new Date().toLocaleDateString('fr-FR')
-                    };
-                    
-                    let docs = JSON.parse(localStorage.getItem('cf_documents') || '[]');
-                    docs.push(mockData);
-                    localStorage.setItem('cf_documents', JSON.stringify(docs));
+                if(!uploadRes.ok) throw new Error('Erreur d\\'upload');
+                const uploadData = await uploadRes.json();
+                const docId = uploadData.docId;
+                
+                progressFill.style.width = '60%';
+                statusText.innerText = 'Analyse IA...';
 
-                    // Add button to view result
-                    const fileItem = document.getElementById(`file-${sf.id}`);
-                    const viewBtn = document.createElement('a');
-                    viewBtn.href = `document.html?id=${docId}`;
-                    viewBtn.className = 'btn btn-outline';
-                    viewBtn.style.padding = '5px 10px';
-                    viewBtn.style.fontSize = '0.8rem';
-                    viewBtn.innerText = 'Voir';
-                    fileItem.appendChild(viewBtn);
+                // 2. Analyze
+                const analyzeRes = await fetch(`http://localhost:8787/api/analyze/${docId}`, {
+                    method: 'POST'
+                });
 
-                    // Check if all done
-                    if(selectedFiles.every(f => f.status === 'done')) {
-                        btnAnalyze.innerText = 'Analyse terminée !';
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.html';
-                        }, 2000);
-                    }
+                if(!analyzeRes.ok) throw new Error('Erreur d\\'analyse');
+                const analyzeData = await analyzeRes.json(); // Données extraites sauvegardées en base
+
+                progressFill.style.width = '100%';
+                sf.status = 'done';
+                statusText.innerHTML = '<i class="fa-solid fa-check-circle"></i> Terminé';
+                statusText.style.color = '#10B981';
+                progressFill.style.background = '#10B981';
+
+                const fileItem = document.getElementById(`file-${sf.id}`);
+                const viewBtn = document.createElement('a');
+                viewBtn.href = `document.html?id=${docId}`;
+                viewBtn.className = 'btn btn-outline';
+                viewBtn.style.padding = '5px 10px';
+                viewBtn.style.fontSize = '0.8rem';
+                viewBtn.innerText = 'Voir';
+                fileItem.appendChild(viewBtn);
+
+                if(selectedFiles.every(f => f.status === 'done' || f.status === 'error')) {
+                    btnAnalyze.innerText = 'Analyse terminée !';
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
                 }
-            }, 500 + index * 200);
+
+            } catch (err) {
+                console.error(err);
+                sf.status = 'error';
+                statusText.innerText = 'Erreur';
+                statusText.style.color = 'var(--danger)';
+                progressFill.style.background = 'var(--danger)';
+                
+                if(selectedFiles.every(f => f.status === 'done' || f.status === 'error')) {
+                    btnAnalyze.innerText = 'Terminé avec des erreurs';
+                }
+            }
         }
     </script>
 </body>
